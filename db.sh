@@ -64,4 +64,4 @@ tar -pczf $OUTPUT$FILENAME.tar.gz $OUTPUT$FILENAME.sql
 
 
 #Import common final functionality
-source "_end.sh"
+source $BASE_DIR"/_init.sh"
