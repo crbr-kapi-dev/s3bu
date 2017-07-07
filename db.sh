@@ -58,7 +58,7 @@ echo "MYSQLDUMP DB: $FILENAME.sql"
 #TODO: What if this errors
 mysqldump --extended-insert=FALSE -u$DB_USER -p$DB_PASS $DB_NAME > $FILENAME.sql
 echo "TAR DB Dump: $FILENAME.tar.gz"
-tar -pczf $FILENAME.tar.gz -C $OUTPUT $(basename $FILENAME).sql
+tar -pczf $OUTPUT$FILENAME.tar.gz -C $OUTPUT $(basename $FILENAME).sql
 
 
 #Import common final functionality
