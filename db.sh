@@ -37,6 +37,9 @@ MAGENTO_DIR=$1
 S3BUCKET=$2
 TYPE=$3
 
+#Make sure Mage dir given doesn't has final slash (standard to add it in the script)
+MAGENTO_DIR=${1%/}
+
 BASE_DIR="$(dirname "$0")"
 
 #Import common initial functionality
