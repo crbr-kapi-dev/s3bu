@@ -2,7 +2,7 @@
 s3_file_exists $S3BUCKET $FILENAME.tar.gz
 
 #copy to s3
-s3_save_file $FILENAME.tar.gz $S3BUCKET
+s3_save_file $OUTPUT$FILENAME.tar.gz $S3BUCKET
 echo "S3 PUT to bucket: $S3BUCKET"
 
 if [ $DEL_TEMPDIR == 1 ]; then
