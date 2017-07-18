@@ -118,8 +118,6 @@ done
 echo "COPY to S3 bucket: $S3BUCKET"
 s3_save_dircontent $S3BUCKET $BACKUP_DIR
 
-echo "DELETE Temp Backup dir: $BACKUP_DIR"
-
 if [ $DEL_TEMPDIR == 1 ]; then
     echo "DELETE Temp Backup dir: $BACKUP_DIR"
     rm -rf $BACKUP_DIR
