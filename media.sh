@@ -1,5 +1,4 @@
-#!/bin/bash
-
+#!/usr/bin/env bash
 ##############################################################################################################
 #HOW TO
 #
@@ -18,13 +17,13 @@
 #
 ##############################################################################################################
 
-#CONFIG STUFF
+#######################################
+#Script Behavior Configuration
+#######################################
 
 #Set this to 1 to not use S3 (condition at s3_FUNCTIONS())
 S3_TEST=0
 DEL_TEMPDIR=1
-
-#END CONFIG STUFF
 
 #check arguments count and not empty
 if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
@@ -32,27 +31,33 @@ if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
 	exit
 fi
 
+
+#######################################
 #Args Variables
-MAGENTO_DIR=$1
-S3BUCKET=$2
-TYPE=$3
+#######################################
 
 #Make sure Mage dir given doesn't has final slash (standard to add it in the script)
 MAGENTO_DIR=${1%/}
+S3BUCKET=$2
+TYPE=$3
 
+
+#######################################
+#Script Initial Settings
+#######################################
+
+#Directory where we'll save BU's
+BACKUP_DIR=$MAGENTO_DIR"/var/_tempbumedia_/"
+#Script Base Dir
 BASE_DIR="$(dirname "$0")"
 
 #Import common initial functionality
 source $BASE_DIR"/_init.sh"
 
-#Define and create temp folder with BU Stuff
-#FILENAME=$(get_filename $TYPE $BACKUP_DIR$DB_NAME)
 
-BACKUP_DIR=$MAGENTO_DIR"/var/_tempbumedia_/"
-
-echo "MKDIR temp backup folder: $BACKUP_DIR"
-#TODO: What if this errors
-mkdir $BACKUP_DIR
+#######################################
+#Media Backup Functionality
+#######################################
 
 SUFIX=$(get_filename $TYPE $BACKUP_DIR"media")
 
