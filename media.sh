@@ -21,8 +21,8 @@
 #CONFIG STUFF
 
 #Set this to 1 to not use S3 (condition at s3_FUNCTIONS())
-S3_TEST=1
-DEL_TEMPDIR=0
+S3_TEST=0
+DEL_TEMPDIR=1
 
 #END CONFIG STUFF
 
