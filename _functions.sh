@@ -102,6 +102,18 @@ s3_save_file() {
     s3cmd put $2 s3://$1
 }
 
+#Arg1: Bucket
+#Arg2: Folder Pattern
+s3_save_dircontent() {
+    if [ $S3_TEST == 1 ]; then
+        echo "S3 TEST MODE: s3_save_dircontent($1, $2)"
+        return
+    fi
+
+    echo "S3 PUT (dir) $2 s3://$1"
+    s3cmd -r -f put $2 s3://$1
+}
+
 s3_delete_file() {
     if [ $S3_TEST == 1 ]; then
         echo "S3 TEST MODE: s3_delete_file($1)"
