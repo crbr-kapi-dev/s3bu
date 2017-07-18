@@ -69,7 +69,7 @@ mysqldump --extended-insert=FALSE -u$DB_USER -p$DB_PASS $DB_NAME > $BACKUP_DIR$F
 
 # tar.gz the dump
 echo "TAR DB Dump: $FILENAME.tar.gz"
-tar -pczf $FILENAME.tar.gz -C $BACKUP_DIR $FILENAME.sql
+tar -pczf $BACKUP_DIR$FILENAME.tar.gz -C $BACKUP_DIR $FILENAME.sql
 
 
 #######################################
