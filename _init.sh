@@ -24,7 +24,11 @@ DB_NAME=$(mage_get_config "dbname" $MAGENTO_DIR)
 DB_PREFIX=$(mage_get_config "table_prefix" $MAGENTO_DIR)
 
 #Set some config options
-FILENAME=$(get_filename $TYPE $OUTPUT$DB_NAME)
 
 #Check that bucket exists, create if it doesn't
 s3_bucket_exists $S3BUCKET
+
+#Create Backup Dir. TODO: What if this errors
+echo "MKDIR temp backup folder: $BACKUP_DIR"
+mkdir $BACKUP_DIR
+

@@ -17,14 +17,13 @@
 
 #TODO: If file is smaller than 5 MB, or file didn't make it to S3, something went wrong: NOTIFY!
 
-
-#CONFIG STUFF
+#######################################
+#Script Behavior Configuration
+#######################################
 
 #Set this to 1 to not use S3 (condition at s3_FUNCTIONS())
-S3_TEST=0
-DEL_TEMPDIR=1
-
-#END CONFIG STUFF
+S3_TEST=1
+DEL_TEMPDIR=0
 
 #check arguments count and not empty
 if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
@@ -32,36 +31,51 @@ if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
 	exit
 fi
 
+
+#######################################
 #Args Variables
-MAGENTO_DIR=$1
-S3BUCKET=$2
-TYPE=$3
+#######################################
 
 #Make sure Mage dir given doesn't has final slash (standard to add it in the script)
 MAGENTO_DIR=${1%/}
+S3BUCKET=$2
+TYPE=$3
 
+
+#######################################
+#Script Initial Settings
+#######################################
+
+#Directory where we'll save BU's
+BACKUP_DIR=$MAGENTO_DIR"/var/_tempbudb_/"
+#Script Base Dir
 BASE_DIR="$(dirname "$0")"
 
 #Import common initial functionality
 source $BASE_DIR"/_init.sh"
 
-#Define and create temp folder with BU Stuff
-OUTPUT=$MAGENTO_DIR"/var/_tempbudb_/"
-echo "MKDIR temp backup folder: $OUTPUT"
-#TODO: What if this errors
-mkdir $OUTPUT
 
+#######################################
+#DB Backup Functionality
+#######################################
 
-#Create DB Dump, tar.gz it
+#DB Backup Name
+FILENAME=$(get_filename $TYPE $BACKUP_DIR$DB_NAME)
 
+#Create DB Dump
 echo "MYSQLDUMP DB: $FILENAME.sql"
 #TODO: What if this errors
-mysqldump --extended-insert=FALSE -u$DB_USER -p$DB_PASS $DB_NAME > $OUTPUT$FILENAME.sql
+mysqldump --extended-insert=FALSE -u$DB_USER -p$DB_PASS $DB_NAME > $FILENAME.sql
+
+# tar.gz the dump
 echo "TAR DB Dump: $FILENAME.tar.gz"
-tar -pczf $OUTPUT$FILENAME.tar.gz $OUTPUT$FILENAME.sql
-#tar -pczf $OUTPUT$FILENAME.tar.gz -C $OUTPUT $(basename $FILENAME).sql
-#echo "tar -pczf $OUTPUT$FILENAME.tar.gz -C $OUTPUT $(basename $FILENAME).sql"
+tar -pczf $BACKUP_DIR$FILENAME.tar.gz $BACKUP_DIR$FILENAME.sql
 
 
-#Import common final functionality
+#######################################
+#Import common final functionality:
+#   Push BU to S3
+#   Delete Temp Folder
+#######################################
+
 source $BASE_DIR"/_end.sh"
