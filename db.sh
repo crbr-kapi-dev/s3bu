@@ -60,16 +60,16 @@ source $BASE_DIR"/_init.sh"
 #######################################
 
 #DB Backup Name
-FILENAME=$(get_filename $TYPE $BACKUP_DIR$DB_NAME)
+FILENAME=$(get_filename $TYPE $DB_NAME)
 
 #Create DB Dump
 echo "MYSQLDUMP DB: $FILENAME.sql"
 #TODO: What if this errors
-mysqldump --extended-insert=FALSE -u$DB_USER -p$DB_PASS $DB_NAME > $FILENAME.sql
+mysqldump --extended-insert=FALSE -u$DB_USER -p$DB_PASS $DB_NAME > $BACKUP_DIR$FILENAME.sql
 
 # tar.gz the dump
 echo "TAR DB Dump: $FILENAME.tar.gz"
-tar -pczf $FILENAME.tar.gz $FILENAME.sql
+tar -pczf $BACKUP_DIR$FILENAME.tar.gz $BACKUP_DIR$FILENAME.sql
 
 
 #######################################
