@@ -24,7 +24,7 @@
 #Set this to 1 to not use S3 (condition at s3_FUNCTIONS())
 S3_TEST=0
 DEL_TEMPDIR=1
-IGNORE_DIRS=(var media .modgit)
+IGNORE_DIRS=(var media .modgit .git)
 
 #check arguments count and not empty
 if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
