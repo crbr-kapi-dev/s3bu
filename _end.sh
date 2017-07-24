@@ -6,8 +6,8 @@ s3_save_file $S3BUCKET $BACKUP_DIR$FILENAME.tar.gz
 echo "S3 PUT to bucket: $S3BUCKET"
 
 if [ $DEL_TEMPDIR == 1 ]; then
-    echo "DELETE Temp Backup dir: $OUTPUT"
-    rm -rf $OUTPUT
+    echo "DELETE Temp Backup dir: $BACKUP_DIR"
+    rm -rf $BACKUP_DIR
 fi
 
 echo "
