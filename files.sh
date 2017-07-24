@@ -24,8 +24,7 @@
 #Set this to 1 to not use S3 (condition at s3_FUNCTIONS())
 S3_TEST=1
 DEL_TEMPDIR=0
-IGNORE_DIRS=('var' 'media')
-#IGNORE_DIRS="var,media"
+IGNORE_DIRS=(var media .modgit)
 
 #check arguments count and not empty
 if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
@@ -68,13 +67,17 @@ DIRNAME=$(basename $MAGENTO_DIR)
 # tar.gz the files
 echo "TAR : $FILENAME.tar.gz"
 
-CMD="tar -pczf $BACKUP_DIR$FILENAME.tar.gz --exclude='var' --exclude='media' -C $MAGENTO_DIR'/..' $DIRNAME"
+EXCLUDE=''
 
+for dir in ${IGNORE_DIRS[*]}
+do
+    EXCLUDE=$EXCLUDE" --exclude=$dir"
+done
 
-tar -pczf $BACKUP_DIR$FILENAME.tar.gz --exclude='var' --exclude='media' -C $MAGENTO_DIR"/.." $DIRNAME
+CMD="tar -pczf $BACKUP_DIR$FILENAME.tar.gz $EXCLUDE -C $MAGENTO_DIR/.. $DIRNAME"
+echo "cmd:  $CMD"
+$CMD
 
-
-exit;
 
 #######################################
 #Import common final functionality:
