@@ -4,7 +4,7 @@
 #
 #Make sure the script has execution permissions
 #At shell run:
-#sh ./fd_media_backup.sh {magento_root_dir} {s3_bucket_name} {hourly|daily_m|daily_w|single|monthly}
+# ./media.sh {magento_root_dir} {s3_bucket_name} {hourly|daily_m|daily_w|single|monthly}
 #
 #{magento_root_dir} -> The folder which has the folders app/, media/, var/, skin/.
 #{s3_bucket_name}   -> The S3 Bucket Name that will be used for the backups. Something like domain.com-mediabackup is always a good name.

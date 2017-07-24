@@ -3,12 +3,12 @@
 # HOW TO
 #
 # Make sure the script has execution permissions
-# ./db.sh {magento_root_dir} {s3_bucket_name} {hourly|daily_m|daily_w|single|monthly}
+# ./files.sh {magento_root_dir} {s3_bucket_name} {hourly|daily_m|daily_w|single|monthly}
 #
 # magento_root_dir -> The folder which has the folders app/, media/, var/, skin/.
 # s3_bucket_name   -> The S3 Bucket Name that will be used for the backups. Something like domain.com-dbbackup is always a good choice.
 # hourly|daily_m|daily_w|single|monthly  -> The type of backup file.
-#		If hourly, it will create a file called dbname_hourly_n.tar.gz. Where "n" is the current hour (24 hour format) (1 am is 1, not 01) 
+#		If hourly, it will create a file called dbname_hourly_n.tar.gz. Where "n" is the current hour (24 hour format) (1 am is 1, not 01)
 #		If daily_m, it will create a file called dbname_daily_m_nn.tar.gz. Where "nn" is the day of the month
 #		If daily_w, it will create a file called dbname_daily_w_nn.tar.gz. Where "nn" is the day of the week
 #		If single, it will create a file called dbname_single.tar.gz
@@ -22,8 +22,10 @@
 #######################################
 
 #Set this to 1 to not use S3 (condition at s3_FUNCTIONS())
-S3_TEST=0
-DEL_TEMPDIR=1
+S3_TEST=1
+DEL_TEMPDIR=0
+IGNORE_DIRS=('var' 'media')
+#IGNORE_DIRS="var,media"
 
 #check arguments count and not empty
 if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
@@ -47,7 +49,7 @@ TYPE=$3
 #######################################
 
 #Directory where we'll save BU's
-BACKUP_DIR=$MAGENTO_DIR"/var/_tempbudb_/"
+BACKUP_DIR=$MAGENTO_DIR"/var/_tempbufiles_/"
 #Script Base Dir
 BASE_DIR="$(dirname "$0")"
 
@@ -59,18 +61,20 @@ source $BASE_DIR"/_init.sh"
 #DB Backup Functionality
 #######################################
 
-#DB Backup Name
-FILENAME=$(get_filename $TYPE $DB_NAME)
+#Backup Name
+FILENAME=$(get_filename $TYPE "files")
+DIRNAME=$(basename $MAGENTO_DIR)
 
-#Create DB Dump
-echo "MYSQLDUMP DB: $FILENAME.sql"
-#TODO: What if this errors
-mysqldump --extended-insert=FALSE -u$DB_USER -p$DB_PASS $DB_NAME > $BACKUP_DIR$FILENAME.sql
+# tar.gz the files
+echo "TAR : $FILENAME.tar.gz"
 
-# tar.gz the dump
-echo "TAR DB Dump: $FILENAME.tar.gz"
-tar -pczf $BACKUP_DIR$FILENAME.tar.gz -C $BACKUP_DIR $FILENAME.sql
+CMD="tar -pczf $BACKUP_DIR$FILENAME.tar.gz --exclude='var' --exclude='media' -C $MAGENTO_DIR'/..' $DIRNAME"
 
+
+tar -pczf $BACKUP_DIR$FILENAME.tar.gz --exclude='var' --exclude='media' -C $MAGENTO_DIR"/.." $DIRNAME
+
+
+exit;
 
 #######################################
 #Import common final functionality:
